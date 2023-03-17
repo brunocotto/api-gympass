@@ -1,12 +1,12 @@
-import { PrismaUsersRepository } from '@/repositories/prisma/prisma-users-repository'
+import { InMemoryUsersRepository } from '@/repositories/in-memory/in-memory-users-repository'
 import { compare } from 'bcryptjs'
 import { expect, describe, it } from 'vitest'
 import { RegisterUseCase } from './register'
 
 describe('Register use case', () => {
   it('should hash user password upon registration', async () => {
-    const prismaUserRepository = new PrismaUsersRepository()
-    const registeUseCase = new RegisterUseCase(prismaUserRepository)
+    const UsersRepository = new InMemoryUsersRepository()
+    const registeUseCase = new RegisterUseCase(UsersRepository)
 
     const { user } = await registeUseCase.execute({
       name: 'John Doe',
