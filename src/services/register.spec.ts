@@ -5,6 +5,19 @@ import { expect, describe, it } from 'vitest'
 import { RegisterUseCase } from './register'
 
 describe('Register use case', () => {
+  it('should be able to register', async () => {
+    const UsersRepository = new InMemoryUsersRepository()
+    const registeUseCase = new RegisterUseCase(UsersRepository)
+
+    const { user } = await registeUseCase.execute({
+      name: 'John Doe',
+      email: 'johndoe@example.com',
+      password: '123456',
+    })
+
+    expect(user.id).toEqual(expect.any(String))
+  })
+
   it('should hash user password upon registration', async () => {
     const UsersRepository = new InMemoryUsersRepository()
     const registeUseCase = new RegisterUseCase(UsersRepository)
@@ -22,8 +35,7 @@ describe('Register use case', () => {
 
     expect(isPasswordCorrectlyHashed).toBe(true)
   })
-})
-describe('should not be able to register with same email twice', () => {
+
   it('should hash user password upon registration', async () => {
     const UsersRepository = new InMemoryUsersRepository()
     const registeUseCase = new RegisterUseCase(UsersRepository)
@@ -36,7 +48,7 @@ describe('should not be able to register with same email twice', () => {
       password: '123456',
     })
 
-    expect(
+    await expect(
       () =>
         registeUseCase.execute({
           name: 'John Doe',
